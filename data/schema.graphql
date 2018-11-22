@@ -1,0 +1,104 @@
+type Balance {
+  principle: Int
+  interest: Int
+}
+
+# The `DateTime` scalar type represents a DateTime
+# value as specified by
+# [iso8601](https://en.wikipedia.org/wiki/ISO_8601).
+scalar DateTime
+
+type Department implements Node {
+  # The ID of the object.
+  id: ID!
+  name: String
+  employees(before: String, after: String, first: Int, last: Int): EmployeeConnection
+}
+
+type DepartmentConnection {
+  pageInfo: PageInfo!
+  edges: [DepartmentEdge]!
+}
+
+type DepartmentEdge {
+  # The item at the end of the edge
+  node: Department
+
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+type Employee implements Node {
+  # The ID of the object.
+  id: ID!
+  name: String
+  hiredOn: DateTime
+  departmentId: Int
+  department: Department
+}
+
+type EmployeeConnection {
+  pageInfo: PageInfo!
+  edges: [EmployeeEdge]!
+}
+
+type EmployeeConnectionsConnection {
+  pageInfo: PageInfo!
+  edges: [EmployeeConnectionsEdge]!
+}
+
+type EmployeeConnectionsEdge {
+  # The item at the end of the edge
+  node: Employee
+
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+type EmployeeEdge {
+  # The item at the end of the edge
+  node: Employee
+
+  # A cursor for use in pagination
+  cursor: String!
+}
+
+enum EmployeeSortEnum {
+  id_asc
+  id_desc
+  name_asc
+  name_desc
+  hired_on_asc
+  hired_on_desc
+  department_id_asc
+  department_id_desc
+}
+
+# An object with an ID
+interface Node {
+  # The ID of the object.
+  id: ID!
+}
+
+type PageInfo {
+  # When paginating forwards, are there more items?
+  hasNextPage: Boolean!
+
+  # When paginating backwards, are there more items?
+  hasPreviousPage: Boolean!
+
+  # When paginating backwards, the cursor to continue.
+  startCursor: String
+
+  # When paginating forwards, the cursor to continue.
+  endCursor: String
+}
+
+type Query {
+  # The ID of the object
+  node(id: ID!): Node
+  allEmployees(sort: [EmployeeSortEnum], before: String, after: String, first: Int, last: Int): EmployeeConnectionsConnection
+  allDepartments(before: String, after: String, first: Int, last: Int): DepartmentConnection
+  getBalance: Balance
+}
+
